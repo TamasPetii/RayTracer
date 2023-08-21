@@ -28,6 +28,7 @@ private:
 	float GetRandom();
 	bool Intersection(glm::vec3 origin, float radius);
 
+	std::vector<Texture2D*> mTextures;
 	Program* mRayTraceProgram;
 	Program* mSceneProgram;
 	FrameBuffer* mSceneFrameBuffer;

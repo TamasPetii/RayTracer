@@ -3,23 +3,26 @@
 
 enum MaterialType
 {
+	REFLECTIVE,
 	DIFFUSE,
-	REFLECTIVE
+	TEXTURED
 };
 
 struct Material
 {
 	MaterialType type;
 	glm::vec3 color;
+	int textureId;
 };
 
 class Sphere
 {
 public:
-	Sphere(const glm::vec3& origin, float radius, const glm::vec3& color, MaterialType type)
+	Sphere(const glm::vec3& origin, float radius, const glm::vec3& color, MaterialType type, int textureId)
 	{
 		this->material.color = color;
 		this->material.type = type;
+		this->material.textureId = textureId;
 		this->origin = origin;
 		this->radius = radius;
 	}

@@ -1,5 +1,7 @@
 #version 460 core
 #define MAX_SPHERE_NUMBER 250
+#define MAX_TEXTURE_NUMBER 3
+#define PI 3.1415926538
 
 struct Hit
 {
@@ -18,10 +20,10 @@ struct Ray
 
 struct Sphere
 {
+	int type;
 	vec3 color;
 	vec3 origin;
 	float radius;
-	int type;
 };
 
 //Input Data
@@ -31,7 +33,8 @@ in vec3 frag_position;
 out vec4 out_color;
 
 //Uniform Data
-uniform mat4 uViewPorjMatrix;
+uniform sampler2D uTextures[MAX_TEXTURE_NUMBER];
+uniform mat4 uViewProjMatrix;
 uniform vec3 uLightDirection;
 uniform vec3 uCameraEye;
 uniform int uPathDepth;
@@ -90,8 +93,8 @@ Ray GenerateRay()
 {
 	vec4 startNdc = vec4(frag_position.xy, -1, 1);
 	vec4 endNdc = vec4(frag_position.xy, 1, 1);
-	vec4 startWorld = inverse(uViewPorjMatrix) * startNdc; 
-	vec4 endWorld = inverse(uViewPorjMatrix) * endNdc;
+	vec4 startWorld = inverse(uViewProjMatrix) * startNdc; 
+	vec4 endWorld = inverse(uViewProjMatrix) * endNdc;
 	startWorld /= startWorld.w;
 	endWorld /= endWorld.w;
 
@@ -135,13 +138,28 @@ void main()
 			newRay.origin = hit.point + hit.normal * 0.01;
 			newRay.direction = reflect(ray.direction, hit.normal);
 			ray = newRay;
-			out_color += vec4(hit.color / pow(2, i) , 1);
 
-			if(hit.type == 0)
+			if(hit.type % 100 == 0)
 			{
+				out_color += vec4(hit.color / pow(2, i) , 1);
+			}
+			else if(hit.type % 100 == 1)
+			{
+				out_color += vec4(hit.color / pow(2, i) , 1);
 				out_color *= vec4(CalculateDirectionLight(hit), 1);
-				i = uPathDepth;
-			} 
+				break;
+			}
+			if(hit.type % 100 == 2)
+			{
+				float theta = asin(hit.normal.y);
+				float gamma = acos((hit.normal.x / cos(theta)));
+				float u = (hit.normal.z < 0 ? 2 * PI - gamma : gamma) / (2 * PI);
+				float v = (theta + PI / 2) / PI;
+				hit.color = texture(uTextures[hit.type / 100], vec2(u,v)).xyz;
+				out_color += vec4(hit.color / pow(2, i), 1);
+				out_color *= vec4(CalculateDirectionLight(hit), 1);
+				break;
+			}
 		}
 	}
 }
