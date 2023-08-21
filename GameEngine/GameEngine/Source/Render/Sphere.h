@@ -30,5 +30,7 @@ public:
 	Material material;
 	glm::vec3 origin;
 	float radius;
+
+	void UpdatePosition(float deltatime);
 };
 

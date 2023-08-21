@@ -35,5 +35,5 @@ private:
 	Camera* mCamera;
 	Canvas* mCanvas;
 	DirectionLight* mDirectionLight;
-	std::unordered_set<Sphere*> mSpheres;
+	std::vector<Sphere*> mSpheres;
 };

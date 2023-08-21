@@ -31,15 +31,14 @@ Renderer::Renderer()
 
 void Renderer::CreateSpheres()
 {
-	
-	mSpheres.insert(new Sphere(glm::vec3(0, -250, 0), 500, glm::vec3(0.3, 0.85, 0.9), DIFFUSE, 0));
-	mSpheres.insert(new Sphere(glm::vec3(0, -150, 0), 150, glm::vec3(0.75, 0.85, 0.9), DIFFUSE, 0));
-	mSpheres.insert(new Sphere(glm::vec3(cosf(2 * M_PI / 3 * 1) * 5, 1, sinf(2 * M_PI / 3 * 1) * 5), 1, glm::vec3(0, 0, 0), REFLECTIVE, 0));
-	mSpheres.insert(new Sphere(glm::vec3(cosf(2 * M_PI / 3 * 2) * 5, 1, sinf(2 * M_PI / 3 * 2) * 5), 1, glm::vec3(0, 0, 0), TEXTURED, 0));
-	mSpheres.insert(new Sphere(glm::vec3(cosf(2 * M_PI / 3 * 3) * 5, 1, sinf(2 * M_PI / 3 * 3) * 5), 1, glm::vec3(0, 0, 0), TEXTURED, 1));
-
+	mSpheres.push_back(new Sphere(glm::vec3(0), 1, glm::vec3(0, 0, 0), REFLECTIVE, 0));
+	mSpheres.push_back(new Sphere(glm::vec3(cosf(2 * M_PI / 3 * 1) * 5, 1, sinf(2 * M_PI / 3 * 1) * 5), 1, glm::vec3(0, 0, 0), REFLECTIVE, 0));
+	mSpheres.push_back(new Sphere(glm::vec3(cosf(2 * M_PI / 3 * 2) * 5, 1, sinf(2 * M_PI / 3 * 2) * 5), 1, glm::vec3(0, 0, 0), TEXTURED, 0));
+	mSpheres.push_back(new Sphere(glm::vec3(cosf(2 * M_PI / 3 * 3) * 5, 1, sinf(2 * M_PI / 3 * 3) * 5), 1, glm::vec3(0, 0, 0), TEXTURED, 1));
+	mSpheres.push_back(new Sphere(glm::vec3(0, -250, 0), 500, glm::vec3(0.3, 0.85, 0.9), DIFFUSE, 0));
+	mSpheres.push_back(new Sphere(glm::vec3(0, -150, 0), 150, glm::vec3(0.75, 0.85, 0.9), DIFFUSE, 0));
 	static bool restart = false;
-	for (int i = 0; i < 245; i++)
+	for (int i = 0; i < 244; i++)
 	{
 		do
 		{
@@ -54,7 +53,7 @@ void Renderer::CreateSpheres()
 			glm::vec3 randomColor = diffuse ? glm::vec3(GetRandom(), GetRandom(), GetRandom()) : glm::vec3(0,0,0);
 			MaterialType randomType = textured ? TEXTURED : diffuse ? DIFFUSE : REFLECTIVE;
 			restart = Intersection(randomPosition, randomRadius);
-			if (!restart) mSpheres.insert(new Sphere(randomPosition, randomRadius, randomColor, randomType, textureId));
+			if (!restart) mSpheres.push_back(new Sphere(randomPosition, randomRadius, randomColor, randomType, textureId));
 		}
 		while (restart);
 	}
@@ -84,7 +83,11 @@ void Renderer::Render()
 
 void Renderer::Update()
 {
-
+	static float lastTime = 0;
+	float currentTime = glfwGetTime();
+	float deltaTime = currentTime - lastTime;
+	(*mSpheres.begin())->UpdatePosition(deltaTime);
+	lastTime = currentTime;
 }
 
 void Renderer::PreRender()
