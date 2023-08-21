@@ -123,14 +123,32 @@ vec3 CalculateDirectionLight(Hit hit)
 	return diffuse + specular;
 }
 
+vec4 CalculateShadow(Hit hit)
+{
+	Ray ray;
+	ray.origin = hit.point + hit.normal * 0.001;
+	ray.direction = normalize(-uLightDirection);
+
+	Hit newHit = ClosesHit(ray);
+	float dist = length(newHit.point - ray.origin);
+
+	if(newHit.success == 1) 
+		return vec4(vec3(0), 1);
+
+
+	return vec4(1.0);
+}
+
 void main()
 {	
 	out_color = vec4(0,0,0,1);
 
+	Hit hit;
 	Ray ray = GenerateRay();
+
 	for(int i = 0; i < uPathDepth; i++)
 	{
-		Hit hit = ClosesHit(ray);
+		hit = ClosesHit(ray);
 
 		if(hit.success == 1)
 		{
@@ -162,4 +180,7 @@ void main()
 			}
 		}
 	}
+
+	if(hit.success == 1)
+		out_color *= CalculateShadow(hit);
 }

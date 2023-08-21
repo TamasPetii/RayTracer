@@ -7,7 +7,7 @@ Renderer::Renderer()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-	glClearColor(0.2f, 0.2f, 0.2f, 1.f);
+	glClearColor(0.2f, 0.3f, 0.6f, 1.f);
 
 	mTextures.push_back(Texture2D::LoadTexture2D("Assets/Sun.jpg"));
 	mTextures.push_back(Texture2D::LoadTexture2D("Assets/Earth.jpg"));
@@ -35,10 +35,9 @@ void Renderer::CreateSpheres()
 	mSpheres.push_back(new Sphere(glm::vec3(cosf(2 * M_PI / 3 * 1) * 5, 1, sinf(2 * M_PI / 3 * 1) * 5), 1, glm::vec3(0, 0, 0), REFLECTIVE, 0));
 	mSpheres.push_back(new Sphere(glm::vec3(cosf(2 * M_PI / 3 * 2) * 5, 1, sinf(2 * M_PI / 3 * 2) * 5), 1, glm::vec3(0, 0, 0), TEXTURED, 0));
 	mSpheres.push_back(new Sphere(glm::vec3(cosf(2 * M_PI / 3 * 3) * 5, 1, sinf(2 * M_PI / 3 * 3) * 5), 1, glm::vec3(0, 0, 0), TEXTURED, 1));
-	mSpheres.push_back(new Sphere(glm::vec3(0, -250, 0), 500, glm::vec3(0.3, 0.85, 0.9), DIFFUSE, 0));
-	mSpheres.push_back(new Sphere(glm::vec3(0, -150, 0), 150, glm::vec3(0.75, 0.85, 0.9), DIFFUSE, 0));
+	mSpheres.push_back(new Sphere(glm::vec3(0, -1500, 0), 1500, glm::vec3(0.75, 0.85, 0.9), DIFFUSE, 0));
 	static bool restart = false;
-	for (int i = 0; i < 244; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		do
 		{
@@ -49,7 +48,7 @@ void Renderer::CreateSpheres()
 			bool textured = typeRandom > 0.85;
 			bool diffuse = typeRandom > 0.05 && !textured;
 			float randomRadius = 0.4 + GetRandom() * 0.15;
-			glm::vec3 randomPosition = glm::vec3((GetRandom() - 0.5) * 20, randomRadius, (GetRandom() - 0.5) * 20);
+			glm::vec3 randomPosition = glm::vec3((GetRandom() - 0.5) * 12, randomRadius, (GetRandom() - 0.5) * 12);
 			glm::vec3 randomColor = diffuse ? glm::vec3(GetRandom(), GetRandom(), GetRandom()) : glm::vec3(0,0,0);
 			MaterialType randomType = textured ? TEXTURED : diffuse ? DIFFUSE : REFLECTIVE;
 			restart = Intersection(randomPosition, randomRadius);
@@ -113,7 +112,7 @@ void Renderer::RenderScene()
 	mRayTraceProgram->Bind();
 	mRayTraceProgram->SetUniform("uViewProjMatrix", mCamera->GetViewProjMatrix());
 	mRayTraceProgram->SetUniform("uCameraEye", mCamera->GetCameraEye());
-	mRayTraceProgram->SetUniform("uPathDepth", 10);
+	mRayTraceProgram->SetUniform("uPathDepth", 5);
 	mRayTraceProgram->SetUniform("uLightDirection", glm::vec3(-1,-1,-1));
 	mCanvas->Draw();
 	mRayTraceProgram->UnBind();
