@@ -22,8 +22,8 @@ Program::Program(const std::vector<Shader>& shaders, const std::vector<ShaderLay
 
 	//Check possible linking errors
 	int result, info_length;
-	glGetShaderiv(mProgramId, GL_COMPILE_STATUS, &result);
-	glGetShaderiv(mProgramId, GL_INFO_LOG_LENGTH, &info_length);
+	glGetProgramiv(mProgramId, GL_LINK_STATUS, &result);
+	glGetProgramiv(mProgramId, GL_INFO_LOG_LENGTH, &info_length);
 
 	if (result == GL_FALSE)
 	{
