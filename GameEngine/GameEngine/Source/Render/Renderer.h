@@ -24,7 +24,6 @@ private:
 	void PostRender();
 	void RenderScene();
 	void CreateSpheres();
-	void UploadSpheresToShader();
 	float GetRandom();
 	bool Intersection(glm::vec3 origin, float radius);
 
@@ -36,4 +35,6 @@ private:
 	Canvas* mCanvas;
 	DirectionLight* mDirectionLight;
 	std::vector<Sphere*> mSpheres;
+
+	unsigned int uniformBufferId;
 };
