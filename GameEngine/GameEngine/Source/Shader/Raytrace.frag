@@ -1,10 +1,11 @@
 #version 460 core
-#define MAX_SPHERE_NUMBER 250
+#define MAX_SPHERE_NUMBER 150
 #define MAX_TEXTURE_NUMBER 3
 #define PI 3.1415926538
 
 struct Hit
 {
+    int index;
 	int type;
     int success;
 	vec3 color;
@@ -16,14 +17,6 @@ struct Ray
 {
 	vec3 origin;
 	vec3 direction;
-};
-
-struct Sphere
-{
-	int type;
-	vec3 color;
-	vec3 origin;
-	float radius;
 };
 
 //Input Data
@@ -39,15 +32,22 @@ uniform vec3 uLightDirection;
 uniform vec3 uCameraEye;
 uniform int uPathDepth;
 uniform int uSphereCount;
-uniform Sphere uSpheres[MAX_SPHERE_NUMBER];
 
-float Intersection(Ray ray, Sphere sphere)
+layout(std140, binding = 0) uniform Spheres
+{
+	int type[MAX_SPHERE_NUMBER];
+	vec3 color[MAX_SPHERE_NUMBER];
+	vec3 origin[MAX_SPHERE_NUMBER];
+	float radius[MAX_SPHERE_NUMBER];
+};
+
+float Intersection(Ray ray, int index)
 {
 	// (t * RD + (RO - CO)) * (t * RD + (RO - CO)) = r^2
 	// t^2 * RD * RD + 2*t*RD*(RO-CO) + (RO-CO)*(RO-CO) - r^2 = 0
 	float a = dot(ray.direction, ray.direction);
-	float b = 2 * dot(ray.direction, ray.origin - sphere.origin);
-	float c = dot(ray.origin - sphere.origin, ray.origin - sphere.origin) - pow(sphere.radius, 2);
+	float b = 2 * dot(ray.direction, ray.origin - origin[index]);
+	float c = dot(ray.origin - origin[index], ray.origin - origin[index]) - pow(radius[index], 2);
 
 	float discriminant = b * b - 4 * a * c;
 
@@ -73,16 +73,17 @@ Hit ClosesHit(Ray ray)
 
 	for(int i = 0; i < uSphereCount; i++)
 	{
-		float hitDistance = Intersection(ray, uSpheres[i]);
+		float hitDistance = Intersection(ray, i);
 
 		if(hitDistance >= 0 && hitDistance < hitMaxDistance)
 		{
 			hitMaxDistance = hitDistance;
+			hit.index = i;
 			hit.success = 1;
 			hit.point = ray.origin + hitDistance * ray.direction;
-			hit.normal = normalize(hit.point - uSpheres[i].origin);
-			hit.color = uSpheres[i].color;
-			hit.type = uSpheres[i].type;
+			hit.normal = normalize(hit.point - origin[i]);
+			hit.color = color[i];
+			hit.type = type[i];
 		}
 	}
 
@@ -130,12 +131,9 @@ vec4 CalculateShadow(Hit hit)
 	ray.direction = normalize(-uLightDirection);
 
 	Hit newHit = ClosesHit(ray);
-	float dist = length(newHit.point - ray.origin);
 
-	if(newHit.success == 1) 
-		return vec4(vec3(0), 1);
-
-
+	if(newHit.index == hit.index) return vec4(1);
+	if(newHit.success == 1) return vec4(vec3(0), 1); 
 	return vec4(1.0);
 }
 
