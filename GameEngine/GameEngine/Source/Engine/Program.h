@@ -1,6 +1,7 @@
 #pragma once
 #include <GLEW/glew.h>
 #include <GLM/glm.hpp>
+#include "ImageTexture.h">
 #include "Shader.h"
 #include "Texture.h"
 
@@ -15,7 +16,9 @@ public:
 
 	template<typename T>
 	inline void SetUniform(const std::string& name, const T& value);
-	inline void SetUniformTexture(const std::string& name, const int sampler, const Texture* texture);
+
+	void SetUniformTexture(const std::string& name, const int sampler, const Texture* texture);
+	void SetUniformTexture(const std::string& name, const int sampler, const ImageTexture* texture);
 
 	unsigned int GetProgramId() { return mProgramId; }
 private:

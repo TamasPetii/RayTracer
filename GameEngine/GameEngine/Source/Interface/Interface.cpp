@@ -155,6 +155,8 @@ void Interface::RenderSettingsWindow()
 {
     ImGui::Begin("Settings");
 
+    ImGui::DragFloat("Scale", &mRenderer->scale, 0.05f);
+
     ImGui::End();
 }
 

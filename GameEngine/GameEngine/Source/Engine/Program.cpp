@@ -51,3 +51,19 @@ void Program::UnBind() const
 {
 	glUseProgram(0);
 }
+
+void Program::SetUniformTexture(const std::string& name, const int sampler, const Texture* texture)
+{
+	if (texture == nullptr) return;
+	glActiveTexture(GL_TEXTURE0 + sampler);
+	glBindTexture(texture->GetType(), texture->GetTextureId());
+	glUniform1i(glGetUniformLocation(mProgramId, name.c_str()), sampler);
+}
+
+void Program::SetUniformTexture(const std::string& name, const int sampler, const ImageTexture* texture)
+{
+	if (texture == nullptr) return;
+	glActiveTexture(GL_TEXTURE0 + sampler);
+	glBindTexture(texture->Get_TextureType(), texture->Get_TextureId());
+	glUniform1i(glGetUniformLocation(mProgramId, name.c_str()), sampler);
+}

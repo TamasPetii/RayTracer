@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\ImageTexture.cpp" />
     <ClCompile Include="Source\Render\Canvas.cpp" />
     <ClCompile Include="Source\Render\GameObjects\Lights\PointLight.cpp" />
     <ClCompile Include="Source\Render\GameObjects\Lights\Light.cpp" />
@@ -185,6 +186,7 @@
     <ClCompile Include="Vendor\STB_IMAGE\STB_IMAGE\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\ImageTexture.h" />
     <ClInclude Include="Source\Render\Canvas.h" />
     <ClInclude Include="Source\Render\GameObjects\Lights\PointLight.h" />
     <ClInclude Include="Source\Render\GameObjects\Lights\Light.h" />

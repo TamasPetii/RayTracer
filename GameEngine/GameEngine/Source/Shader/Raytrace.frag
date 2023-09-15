@@ -26,6 +26,8 @@ in vec3 frag_position;
 out vec4 out_color;
 
 //Uniform Data
+uniform samplerCube u_SkyboxTexture;
+uniform float scale;
 uniform sampler2D uTextures[MAX_TEXTURE_NUMBER];
 uniform mat4 uViewProjMatrix;
 uniform vec3 uLightDirection;
@@ -165,7 +167,7 @@ void main()
 				out_color *= vec4(CalculateDirectionLight(hit), 1);
 				break;
 			}
-			if(hit.type % 100 == 2)
+			else if(hit.type % 100 == 2)
 			{
 				float theta = asin(hit.normal.y);
 				float gamma = acos((hit.normal.x / cos(theta)));
@@ -176,6 +178,12 @@ void main()
 				out_color *= vec4(CalculateDirectionLight(hit), 1);
 				break;
 			}
+		}
+		if(i > 0 && hit.success == 0)
+		{
+			vec4 color = texture(u_SkyboxTexture, ray.direction);
+			out_color += color;
+			break;
 		}
 	}
 

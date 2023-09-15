@@ -5,7 +5,8 @@ enum MaterialType
 {
 	REFLECTIVE,
 	DIFFUSE,
-	TEXTURED
+	TEXTURED,
+	PATTERN
 };
 
 struct Material

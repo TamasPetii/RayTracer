@@ -19,6 +19,7 @@ public:
 	void Update();
 	inline FrameBuffer* GetSceneFrameBuffer() const { return mSceneFrameBuffer; }
 	inline Camera* GetCamera() const { return mCamera; }
+	float scale = 1;
 private:
 	void PreRender();
 	void PostRender();
@@ -35,6 +36,8 @@ private:
 	Canvas* mCanvas;
 	DirectionLight* mDirectionLight;
 	std::vector<Sphere*> mSpheres;
+
+	ImageTexture* skyboxTexture;
 
 	unsigned int uniformBufferId;
 };

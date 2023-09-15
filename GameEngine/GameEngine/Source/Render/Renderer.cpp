@@ -64,6 +64,18 @@ Renderer::Renderer()
 	}
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	static std::vector<std::string> paths =
+	{
+		"Assets/Skybox/right.jpg",
+		"Assets/Skybox/left.jpg",
+		"Assets/Skybox/top.jpg",
+		"Assets/Skybox/bottom.jpg",
+		"Assets/Skybox/front.jpg",
+		"Assets/Skybox/back.jpg"
+	};
+
+	skyboxTexture = ImageTexture::LoadTextureMap(paths);
 }
 
 void Renderer::CreateSpheres()
@@ -146,6 +158,8 @@ void Renderer::PreRender()
 	mRayTraceProgram->SetUniformTexture("uTextures[0]", 0, mTextures[0]);
 	mRayTraceProgram->SetUniformTexture("uTextures[1]", 1, mTextures[1]);
 	mRayTraceProgram->SetUniformTexture("uTextures[2]", 2, mTextures[2]);
+	mRayTraceProgram->SetUniformTexture("u_SkyboxTexture", 3, skyboxTexture);
+	mRayTraceProgram->SetUniform("scale", scale);
 	mRayTraceProgram->UnBind();	
 }
 
